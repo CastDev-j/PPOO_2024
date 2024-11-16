@@ -1,5 +1,5 @@
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.table.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
@@ -45,7 +45,23 @@ public class BoletaCalificacionesCRUD extends JFrame {
         panelBotones.add(botonAgregarAlumno);
 
         modeloTablaAlumnos = new DefaultTableModel(new String[]{"ID", "Alumno", "Materia", "Profesor", "Calificación", "Eliminar"}, 0);
-        tablaAlumnos = new JTable(modeloTablaAlumnos);
+        tablaAlumnos = new JTable(modeloTablaAlumnos) {
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component c = super.prepareRenderer(renderer, row, column);
+                if (column == 4) { 
+                    double calificacion = (double) getValueAt(row, column);
+                    if (calificacion < 70) {
+                        c.setBackground(new Color(255, 200, 200)); 
+                    } else {
+                        c.setBackground(new Color(200, 255, 200)); 
+                    }
+                } else {
+                    c.setBackground(Color.WHITE); 
+                }
+                return c;
+            }
+        };
 
         JScrollPane scrollAlumnos = new JScrollPane(tablaAlumnos);
 
@@ -61,7 +77,28 @@ public class BoletaCalificacionesCRUD extends JFrame {
         });
 
         modeloTablaMaterias = new DefaultTableModel(new String[]{"Materia", "Cantidad Alumnos", "Promedio"}, 0);
-        tablaMaterias = new JTable(modeloTablaMaterias);
+        tablaMaterias = new JTable(modeloTablaMaterias) {
+            @Override
+            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+                Component c = super.prepareRenderer(renderer, row, column);
+                if (column == 2) { 
+                    String promedioTexto = getValueAt(row, column).toString();
+                    try {
+                        double promedio = Double.parseDouble(promedioTexto);
+                        if (promedio < 70) {
+                            c.setBackground(new Color(255, 200, 200)); // Rojo claro
+                        } else {
+                            c.setBackground(new Color(200, 255, 200)); // Verde claro
+                        }
+                    } catch (NumberFormatException ex) {
+                        c.setBackground(Color.WHITE); // En caso de error, fondo blanco
+                    }
+                } else {
+                    c.setBackground(Color.WHITE); // Fondo blanco para las demás columnas
+                }
+                return c;
+            }
+        };
 
         JScrollPane scrollMaterias = new JScrollPane(tablaMaterias);
 
@@ -95,7 +132,7 @@ public class BoletaCalificacionesCRUD extends JFrame {
             String nombre = "Alumno " + i;
             String materia = materias.get(random.nextInt(materias.size())).getNombre();
             String profesor = "Profesor " + (random.nextInt(10) + 1);
-            double calificacion = 50 + random.nextInt(51); 
+            double calificacion = 50 + random.nextInt(51);
             alumnos.add(new Alumno(nombre, materia, profesor, calificacion));
         }
     }
