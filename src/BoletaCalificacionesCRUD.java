@@ -86,15 +86,15 @@ public class BoletaCalificacionesCRUD extends JFrame {
                     try {
                         double promedio = Double.parseDouble(promedioTexto);
                         if (promedio < 70) {
-                            c.setBackground(new Color(255, 200, 200)); // Rojo claro
+                            c.setBackground(new Color(255, 200, 200)); 
                         } else {
-                            c.setBackground(new Color(200, 255, 200)); // Verde claro
+                            c.setBackground(new Color(200, 255, 200));
                         }
                     } catch (NumberFormatException ex) {
-                        c.setBackground(Color.WHITE); // En caso de error, fondo blanco
+                        c.setBackground(Color.WHITE); 
                     }
                 } else {
-                    c.setBackground(Color.WHITE); // Fondo blanco para las demás columnas
+                    c.setBackground(Color.WHITE);
                 }
                 return c;
             }
